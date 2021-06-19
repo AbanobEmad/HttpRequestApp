@@ -1,8 +1,8 @@
-import 'dart:convert' as convert;
+
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:testapp/Models/user.dart';
+import 'package:testapp/Services/api_Sevices.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,19 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Home(),
@@ -42,13 +30,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  ApiSevices apiSevices=ApiSevices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Center(child: Text("Users"),)),
       body: Center(
         child: FutureBuilder(
-          future: _GetData(),
+          future: apiSevices.GetData(),
           builder: (context,snapshot)
           {
             if(!snapshot.hasData)
@@ -115,19 +104,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<List<User>> _GetData() async{
-    var response = await http.get("http://www.json-generator.com/api/json/get/bYKKPeXRcO?indent=2");
-    List<User> users = [];
-    if(response.statusCode == 200) {
-      var jsData = convert.jsonDecode(response.body);
-
-      for (var d in jsData) {
-        User user=User(d["index"],d["about"],d["name"],d["picture"],d["company"],d["email"]);
-        users.add(user);
-      }
-    }
-    return users;
-  }
+//  Future<List<User>> GetData() async{
+//    var response = await http.get("http://www.json-generator.com/api/json/get/bYKKPeXRcO?indent=2");
+//    List<User> users = [];
+//    if(response.statusCode == 200) {
+//      var jsData = convert.jsonDecode(response.body);
+//      users = (jsData as List).map((e) => User.fromJson(e)).toList();
+//    }
+//    return users;
+//  }
 }
 
 
